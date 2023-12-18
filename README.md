@@ -285,7 +285,7 @@ But...
 
 &#8195;&#8195;上面的小箭头其实是经过一次“变态”转换之后的效果。用过 CI 坐标的都知道，在 CoreImage 中或者说读到内存中的图片，坐标系的原点和图片方向是有关系的，并不是单纯和 UI 坐标上下反过来的关系。正常情况下图片的方向是 **CGImagePropertyOrientation.up**，想模拟其他方向可以把手机横着或者倒过来拍照试试，还用上面的多条码图片举例，按照我们 1-4 步骤出来的效果其实是这样的;
 
-<img src="" width="30%" height="30%">
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_8.PNG" width="30%" height="30%">
 
 
 很明显，识别区域都是有的，但坐标方向是不准确的。可以看一下 **CGImagePropertyOrientation** 的注解，对每个方向的原点位置都做了说明：
