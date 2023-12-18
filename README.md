@@ -216,7 +216,7 @@ func drawImage(_ oriImg: CGImage, toCenter bgImg: CGImage) -> UIImage? {
 
 &#8195;&#8195;当看到 Vision 返回了 boundingBox 时，又想到了一个需求：如果图片上有多个条码时，在每个可识别的区域加一个小箭头🔜，让用户自己选择使用哪个结果。效果如下：
 
-<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" style="zoom:50%;" ><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" style="zoom:50%;" ><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" style="zoom:50%;" >
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" width="40%" height="40%">  <img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" width="40%" height="40%"> <img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" width="40%" height="40%">
 
 思路是：
 
@@ -284,8 +284,7 @@ But...
 
 &#8195;&#8195;上面的小箭头其实是经过一次“变态”转换之后的效果。用过 CI 坐标的都知道，在 CoreImage 中或者说读到内存中的图片，坐标系的原点和图片方向是有关系的，并不是单纯和 UI 坐标上下反过来的关系。正常情况下图片的方向是 **CGImagePropertyOrientation.up**，想模拟其他方向可以把手机横着或者倒过来拍照试试，还用上面的多条码图片举例，按照我们 1-4 步骤出来的效果其实是这样的;
 
-![](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_8.PNG)
-
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_8.PNG" width="40%" height="40%">
 
 很明显，识别区域都是有的，但坐标方向是不准确的。可以看一下 **CGImagePropertyOrientation** 的注解，对每个方向的原点位置都做了说明：
 
