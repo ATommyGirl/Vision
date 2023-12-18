@@ -216,7 +216,7 @@ func drawImage(_ oriImg: CGImage, toCenter bgImg: CGImage) -> UIImage? {
 
 &#8195;&#8195;当看到 Vision 返回了 boundingBox 时，又想到了一个需求：如果图片上有多个条码时，在每个可识别的区域加一个小箭头🔜，让用户自己选择使用哪个结果。效果如下：
 
-<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" style="zoom:50%;" />
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" style="zoom:50%;" ><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" style="zoom:50%;" ><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" style="zoom:50%;" >
 
 思路是：
 
