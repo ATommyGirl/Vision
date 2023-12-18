@@ -151,7 +151,7 @@ errorCorrectionLevel - 纠错级别；
 
 &#8195;&#8195;那影响扫码效率的因素都有哪些，除了码的形状(复杂度)，是不是还有背景色或者说对比度？本来想尝试一下“抠图”，把这个贴边的条形码扣到一个白色背景上，结果算法没整明白，抠出来一个莫名其妙的效果：
 
-<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_6.PNG" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_7.PNG" style="zoom:50%;" />
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_6.PNG" width="30%" height="30%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_7.PNG" width="30%" height="30%">
 
 
 so...放弃。抠它干嘛呢，直接画到一个白色的背景图片上呢？为了避免再出现这种贴边的图、镂空的图，先是画了一个比原图的宽高都大 10 的白色图片，然后把原图放到白色背景板的中心，再识别，就成功了。
@@ -217,7 +217,7 @@ func drawImage(_ oriImg: CGImage, toCenter bgImg: CGImage) -> UIImage? {
 
 &#8195;&#8195;当看到 Vision 返回了 boundingBox 时，又想到了一个需求：如果图片上有多个条码时，在每个可识别的区域加一个小箭头🔜，让用户自己选择使用哪个结果。效果如下：
 
-<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" style="zoom:50%;" />
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" width="30%" height="30%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" width="30%" height="30%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" width="30%" height="30%">
 
 思路是：
 
@@ -285,7 +285,7 @@ But...
 
 &#8195;&#8195;上面的小箭头其实是经过一次“变态”转换之后的效果。用过 CI 坐标的都知道，在 CoreImage 中或者说读到内存中的图片，坐标系的原点和图片方向是有关系的，并不是单纯和 UI 坐标上下反过来的关系。正常情况下图片的方向是 **CGImagePropertyOrientation.up**，想模拟其他方向可以把手机横着或者倒过来拍照试试，还用上面的多条码图片举例，按照我们 1-4 步骤出来的效果其实是这样的;
 
-![](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_8.PNG)
+<img src="" width="30%" height="30%">
 
 
 很明显，识别区域都是有的，但坐标方向是不准确的。可以看一下 **CGImagePropertyOrientation** 的注解，对每个方向的原点位置都做了说明：
@@ -340,7 +340,7 @@ func getCGAffineTransform(from orientation: CGImagePropertyOrientation) -> CGAff
 }
 ```
 
-![](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_9.PNG)
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_9.PNG" width="30%" height="30%">
 
 
 到这里应该可以了吧？
@@ -353,12 +353,12 @@ But...
 
 &#8195;&#8195;我个人对某些机型或者系统有自己奇奇怪怪的情怀，很少以旧换新。例如有台 iPhone 5s 是第一代指纹识别的 HOME 键，让它的系统一直停留在了 ios9；又例如有台 iPhone 12 边框是方的所以喜欢，让它停在了 ios15.4，也因为莫名其妙觉得它比较省电。这不是重点，重点是同样的 API、同样的律动小箭头、同样的一个贴边儿条形码，在这台 iPhone 12 上，识别出来是这样的，具体识别出来了几个，我也没数🤷‍♀️：
 
-<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_5.jpg" style="zoom:50%;" />
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_5.jpg" width="50%" height="50%">
 
 ...
 ...
 
-<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" />
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" width="20%" height="20%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" width="20%" height="20%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" width="20%" height="20%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" width="20%" height="20%"><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" width="20%" height="20%">
 
 &#8195;&#8195;哪个坏人总说客户端简单的？打你哦。
 
