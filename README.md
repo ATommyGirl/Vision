@@ -151,10 +151,7 @@ errorCorrectionLevel - 纠错级别；
 
 &#8195;&#8195;那影响扫码效率的因素都有哪些，除了码的形状(复杂度)，是不是还有背景色或者说对比度？本来想尝试一下“抠图”，把这个贴边的条形码扣到一个白色背景上，结果算法没整明白，抠出来一个莫名其妙的效果：
 
-<div style="display:inline-block">
-  <img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_6.PNG">
-  <img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_7.PNG">
-</div>
+<img src="[https://github.com/kingsic/SGQRCode/raw/master/Pictures/sgqrcode_1.png](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_6.PNG)" width="40%" height="40%">  <img src="[https://github.com/kingsic/SGQRCode/raw/master/Pictures/sgqrcode_2.png](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_7.PNG)" width="40%" height="40%">
 
 so...放弃。抠它干嘛呢，直接画到一个白色的背景图片上呢？为了避免再出现这种贴边的图、镂空的图，先是画了一个比原图的宽高都大 10 的白色图片，然后把原图放到白色背景板的中心，再识别，就成功了。
 
