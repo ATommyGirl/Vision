@@ -114,6 +114,7 @@ class BarcodeDetector: UIViewController {
     }
     
     @objc func doneButtonTapped() {
+        navigationItem.rightBarButtonItem?.isEnabled = false
         startDetectAnimate()
         detectBarcodeFromImg(img!) { [weak self] barcode in
             DispatchQueue.main.async {
@@ -128,10 +129,10 @@ class BarcodeDetector: UIViewController {
             delegate?.failDetectBarcode(self, error: error)
             closePreview()
         }
-//        else if barcode.count == 1 {
-//            delegate?.didDetectedBarcode(self, result: barcode.result!)
-//            closePreview()
-//        }
+        else if barcode.count == 1 {
+            delegate?.didDetectedBarcode(self, result: barcode.result!)
+            closePreview()
+        }
         else {
             let boundingBox = convertCIBoundingRectToUIRect(barcode.ciRect)
             
@@ -157,11 +158,11 @@ class BarcodeDetector: UIViewController {
         closePreview()
     }
     
-    func convertCIBoundingRectToUIRect(_ ci: CGRect) -> CGRect {
+    func convertCIBoundingRectToUIRect(_ cii: CGRect) -> CGRect {
         let renderingRect = imgV.renderingRectForImage()
         
-        let transformedBoundingBox = ci.applying(CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: 1))
-        
+        let ci = cii.applying(getCGAffineTransform(from: orientation!))
+
         let w = ci.size.width * renderingRect!.size.width
         let h = ci.size.height * renderingRect!.size.height
         let x = ci.origin.x * renderingRect!.size.width + renderingRect!.origin.x
@@ -177,12 +178,16 @@ class BarcodeDetector: UIViewController {
             completion(Barcode(count: 0, ciRect: .null, result: nil, error: "Image not available!"))
             return
         }
+        
         DispatchQueue.init(label: "com.yydetector.session.queue").async { [self] in
             let tempBgCG = imageFromColor(.white, size: CGSize.init(width: oriCG.width, height: oriCG.height)).cgImage!
             var newImg = drawImage(oriCG, toCenter: tempBgCG)
             guard let buffer = pixelBuffer(from: newImg!) else {
                 newImg = nil
-                completion(Barcode(count: 0, ciRect: .null, result: nil, error: "Image type not support!"))
+                completion(Barcode(count: 0,
+                                   ciRect: .null,
+                                   result: nil,
+                                   error: "Image type not support!"))
                 return
             }
             
@@ -213,33 +218,43 @@ class BarcodeDetector: UIViewController {
 
 //            let requestHandler = VNImageRequestHandler.init(cvPixelBuffer: buffer)
             do {
-                let detectRequest = VNDetectBarcodesRequest { request, error in
+                let detectRequest = VNDetectBarcodesRequest { [self] request, error in
                     if let error = error {
-                        completion(Barcode(count: 0, ciRect: .null, result: nil, error: error.localizedDescription))
+                        completion(Barcode(count: 0,
+                                           ciRect: .null,
+                                           result: nil,
+                                           error: error.localizedDescription))
                         print("Error in text recognition: \(error.localizedDescription)")
                         return
                     }
                     
                     if request.results!.isEmpty {
-                        completion(Barcode(count: 0, ciRect: .null, result: nil, error: "No result of request!"))
+                        completion(Barcode(count: 0,
+                                           ciRect: .null,
+                                           result: nil,
+                                           error: "No result of request!"))
                         return
                     }
                     
                     for case let barcode as VNBarcodeObservation in request.results! {
                         if barcode.payloadStringValue != nil {
-                            let formatter = self.printBarcode(barcode)
-                            completion(Barcode(count: request.results!.count, ciRect: barcode.boundingBox, result: formatter, error: nil))
+                            let formatter = printBarcode(barcode)
+                            completion(Barcode(count: request.results!.count,
+                                               ciRect: barcode.boundingBox,
+                                               result: formatter,
+                                               error: nil))
                         } else {
-                            completion(Barcode(count: request.results!.count, ciRect: .null, result: nil, error: "No payload string value!"))
+                            completion(Barcode(count: request.results!.count,
+                                               ciRect: .null,
+                                               result: nil,
+                                               error: "No payload string value!"))
                         }
                     }
                 }
                 
                 try requestHandler.perform([detectRequest])
             } catch {
-                DispatchQueue.main.async {
-                    completion(Barcode(count: 0, ciRect: .null, result: nil, error: error.localizedDescription))
-                }
+                completion(Barcode(count: 0, ciRect: .null, result: nil, error: error.localizedDescription))
             }
         }
     }
@@ -364,5 +379,26 @@ class BarcodeDetector: UIViewController {
             return .up //不返回错误，默认按照 up
         }
     }
+    
+    func getCGAffineTransform(from orientation: CGImagePropertyOrientation) -> CGAffineTransform {
+        switch orientation {
+        case .up, .down:
+            return CGAffineTransform(scaleX: 1, y: 1).translatedBy(x: 0, y: 0)//.
+        default:
+            return CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1)//.
 
+        /*
+        case .left, .right:
+            return CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1)
+        case .upMirrored:
+            return CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1)
+        case .downMirrored:
+            return CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1)
+        case .leftMirrored:
+            return CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1)
+        case .rightMirrored:
+            return CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1)
+         */
+        }
+    }
 }
