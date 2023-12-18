@@ -2,8 +2,6 @@
 
 # 一码归一码
 
----
-
 ## Barcode
 
 &#8195;&#8195;"Barcode"（条形码）是一种用于储存和检索数据的图形标识符。它通常由一系列宽度和间隙不同的条和空组成，用于表示数字、字母和其他字符。条形码在商业、物流、库存管理和其他领域广泛应用，以提高数据的追踪和管理效率。
@@ -146,18 +144,15 @@ errorCorrectionLevel - 纠错级别；
 
 &#8195;&#8195;原本以为写到这里作为一个补充功能也算是够用了，直到测试拿出了下面这张图：用在线工具随便生成了一个条形码、保存到手机相册、识别，扫码可以扫出来，但识别不出来[Emm][Emm]...
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_4.jpg 300%}</div>
-</center>
+![](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_4.jpg)
+
 
 &#8195;&#8195;码看着是个正经码，但是为什么识别不出来呢？左右两侧的边缘处贴边了？PC 上截图再保存，也是可以识别出来的，那估计就是贴边导致的...说到这里，你可以随手拿起一个身边有条码的物品，不论物品的外包装是什么颜色的，条码一般都会单独有一个白色（浅色）的、码的四周有空白的背景区域，目的就是为了扫码的时候可以识别的快一点。看到有个外国网友提问：“自己在帮一个彩色水笔的公司做扫码功能，他们水笔的外包装是偏暗黑色的、水笔的条形码是...五颜六色的彩色，结账扫码时总是很慢，如何提到扫码的效率？”咱就是说，换个外包装呢😶...
 
 &#8195;&#8195;那影响扫码效率的因素都有哪些，除了码的形状(复杂度)，是不是还有背景色或者说对比度？本来想尝试一下“抠图”，把这个贴边的条形码扣到一个白色背景上，结果算法没整明白，抠出来一个莫名其妙的效果：
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_6.PNG 200%}</div>
-	<div style="display:inline-block;margin-left:10px;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_7.PNG 200%}</div>
-</center>
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_6.PNG" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_7.PNG" style="zoom:50%;" />
+
 
 so...放弃。抠它干嘛呢，直接画到一个白色的背景图片上呢？为了避免再出现这种贴边的图、镂空的图，先是画了一个比原图的宽高都大 10 的白色图片，然后把原图放到白色背景板的中心，再识别，就成功了。
 
@@ -222,11 +217,8 @@ func drawImage(_ oriImg: CGImage, toCenter bgImg: CGImage) -> UIImage? {
 
 &#8195;&#8195;当看到 Vision 返回了 boundingBox 时，又想到了一个需求：如果图片上有多个条码时，在每个可识别的区域加一个小箭头🔜，让用户自己选择使用哪个结果。效果如下：
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg 200%}</div>
-	<div style="display:inline-block;margin-left:10px;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg 200%}</div>
-  <div style="display:inline-block;margin-left:10px;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg 200%}</div>
-</center>
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_1.jpg" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_2.jpg" style="zoom:50%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_3.jpg" style="zoom:50%;" />
+
 思路是：
 
 1. 识别到每个条码的 **boundingBox**，注意坐标系是 (0,1) 坐标，先简称为 CI 坐标系吧；
@@ -293,9 +285,8 @@ But...
 
 &#8195;&#8195;上面的小箭头其实是经过一次“变态”转换之后的效果。用过 CI 坐标的都知道，在 CoreImage 中或者说读到内存中的图片，坐标系的原点和图片方向是有关系的，并不是单纯和 UI 坐标上下反过来的关系。正常情况下图片的方向是 **CGImagePropertyOrientation.up**，想模拟其他方向可以把手机横着或者倒过来拍照试试，还用上面的多条码图片举例，按照我们 1-4 步骤出来的效果其实是这样的;
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_8.PNG 200%}</div>
-</center>
+![](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_8.PNG)
+
 
 很明显，识别区域都是有的，但坐标方向是不准确的。可以看一下 **CGImagePropertyOrientation** 的注解，对每个方向的原点位置都做了说明：
 
@@ -349,9 +340,8 @@ func getCGAffineTransform(from orientation: CGImagePropertyOrientation) -> CGAff
 }
 ```
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_9.PNG 200%}</div>
-</center>
+![](https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_9.PNG)
+
 
 到这里应该可以了吧？
 
@@ -363,23 +353,12 @@ But...
 
 &#8195;&#8195;我个人对某些机型或者系统有自己奇奇怪怪的情怀，很少以旧换新。例如有台 iPhone 5s 是第一代指纹识别的 HOME 键，让它的系统一直停留在了 ios9；又例如有台 iPhone 12 边框是方的所以喜欢，让它停在了 ios15.4，也因为莫名其妙觉得它比较省电。这不是重点，重点是同样的 API、同样的律动小箭头、同样的一个贴边儿条形码，在这台 iPhone 12 上，识别出来是这样的，具体识别出来了几个，我也没数🤷‍♀️：
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_5.jpg 200%}</div>
-</center>
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_5.jpg" style="zoom:50%;" />
 
 ...
 ...
 
-<center>
-	<div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg 80%}</div>
-  <div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg 80%}</div>
-  <div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg 80%}</div>
-  <div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg 80%}</div>
-  <div style="display:inline-block;">{%img https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg 80%}</div>
-</center>
-
-
-
+<img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" /><img src="https://yyblog-images-1258406742.cos.ap-beijing.myqcloud.com/vision_10.jpg" style="zoom: 33%;" />
 
 &#8195;&#8195;哪个坏人总说客户端简单的？打你哦。
 
